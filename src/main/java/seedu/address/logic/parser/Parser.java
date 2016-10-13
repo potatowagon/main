@@ -82,15 +82,6 @@ public class Parser {
 		case AddCommand.COMMAND_WORD:
 			return prepareAdd(arguments);
 
-		case AddFloatingTaskCommand.COMMAND_WORD:
-			return new AddFloatingTaskParser().parse(arguments);
-
-		case AddEventCommand.COMMAND_WORD:
-			return new AddEventParser().parse(arguments);
-
-		case AddDeadlineCommand.COMMAND_WORD:
-			return new AddDeadlineParser().parse(arguments);
-
 		case SelectCommand.COMMAND_WORD:
 			return prepareSelect(arguments);
 
