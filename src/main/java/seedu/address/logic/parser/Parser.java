@@ -3,6 +3,8 @@ package seedu.address.logic.parser;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -127,56 +129,61 @@ public class Parser {
 	}
 
 	/**
-     * Parses arguments in the context of the add Task command.
-     *
-     * @param args full command args string
-     * @return the prepared command
-     */
-    private Command prepareAdd(String args) {
-    	args=args.trim();
-        final Matcher matcher = PERSON_DATA_ARGS_FORMAT.matcher(args.trim());//Todos: replace with TASK_DATA_ARGS_FORMAT
-        // Validate arg string format
-        if (!matcher.matches()) {
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
-        }
-            String type = idTaskType(args);
-        	switch(type){
-        	case("float"):
-        		return new AddFloatingTaskParser().parse(args);
-        	
-        	case("deadline"):
-        		return new AddDeadlineParser().parse(args);
-        	
-        	case("event"):
-        		return new AddEventParser().parse(args);	
-        	}
-        	return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));	
-        }
+	 * Parses arguments in the context of the add Task command.
+	 *
+	 * @param args
+	 *            full command args string
+	 * @return the prepared command
+	 */
+	private Command prepareAdd(String args) {
+		args = args.trim();
+		final Matcher matcher = PERSON_DATA_ARGS_FORMAT.matcher(args.trim());// Todos:
+																				// replace
+																				// with
+																				// TASK_DATA_ARGS_FORMAT
+		// Validate arg string format
+		if (!matcher.matches()) {
+			return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+		}
+		String type = idTaskType(args);
+		switch (type) {
+		case ("float"):
+			return new AddFloatingTaskParser().parse(args);
 
-    /**
-     * Identifies the type of task.
-     * 
-     * @param args
-     * @return type of task as String
-     */
+		case ("deadline"):
+			return new AddDeadlineParser().parse(args);
+
+		case ("event"):
+			return new AddEventParser().parse(args);
+		}
+		return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+	}
+
+	/**
+	 * Identifies the type of task.
+	 * 
+	 * @param args
+	 * @return type of task as String
+	 */
 	private String idTaskType(String args) {
-		int s = wordCount(args);
-		switch (s) {
-		case (1):
-			return "float";
 
-		case (2):
-			return "float";
+		// float, no date or time
+		// deadline, has date or/and time
+		// event has date and time and to keyword
+		String[] s = args.split(" ");
 
-		case (3):
-			return "deadline";
-
-		case (5):
-			return "event";
-
-		case (6):
+		if (isEvent(s)) {
 			return "event";
 		}
+		
+		if (isDeadline(s)) {
+			return "deadline";
+		}
+		
+		if (isFloat(s)) {
+			return "float";
+		}
+
 		return null;
 	}
 
@@ -186,6 +193,80 @@ public class Parser {
 		} else {
 			return s.trim().split("\\s+").length;
 		}
+	}
+	
+	/**
+	 * Checks if arguments contains `to`, at least one LocalDate or LocalTime before `to` and at least one LocalDate or LocalTime after `to`. 
+	 * @param args
+	 * @return true if task is an event
+	 */
+	private boolean isEvent(String[] args) {
+		boolean passCheck = false;
+		// max no. of args for event is 6 (name, sd, st, ed, et, loc)
+		if (args.length <= 6) {
+			passCheck = true;
+		}
+		int toIndex = 0;
+		// check for `to`
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("to")) {
+				passCheck = true;
+				toIndex = i;
+				break;
+			}
+		}
+		
+		// check for at least one date/time input before `to`
+		if (passCheck) {
+			passCheck=LocalDateTimePresenceChecker(0, toIndex, args);
+		}
+		// check for at least one date/time input after `to`
+		if (passCheck) {
+			passCheck=LocalDateTimePresenceChecker(toIndex, args.length, args);
+		}
+		return passCheck;
+	}
+	
+	private boolean isDeadline(String[] args) {
+		boolean passCheck = false;
+		//max no. of arguments for deadline is 3 (name, dd, dt)  
+		if(args.length<=3) {
+			passCheck=true;
+		}
+		//check for at least one date or time after name
+		if(passCheck) {
+			passCheck=LocalDateTimePresenceChecker(1, args.length, args);
+		}
+		return passCheck;
+	}
+	
+	private boolean isFloat(String[] args) {
+		
+		//max no. of arguments for float is 2 (name, p-)
+		if(args.length==2) {
+			return args[1].matches("\\d");
+		}
+		if(args.length==1) {
+			return true;
+		}
+		return false; 
+	}
+	/**
+	 * Checks for the presence of at least one LocalDate or LocalTime object that can be formed from a String array
+	 */
+	private boolean LocalDateTimePresenceChecker(int startIndex, int endIndex, String[] args) {
+		DateParser isDate = new DateParser(LocalDate.now());
+		TimeParser isTime = new TimeParser(LocalTime.now());
+		for (int i = startIndex; i < endIndex; i++) {
+			try {
+				if (isDate.parse(args[i]) instanceof LocalDate || isTime.parse(args[i]) instanceof LocalTime) {
+					return true;
+				}
+			} catch (IllegalValueException e) {
+				//do nothing.
+			}
+		} 
+		return false;	
 	}
 
 	/**
