@@ -8,7 +8,7 @@ import seedu.address.commons.util.CollectionUtil;
  * Represents a Task in the address book.
  * Guarantees: Is a POJO. Details are present and not null. Field values are validated and immutable.
  */
-public abstract class Task {
+public class Task {
 
     public final Name name;
 
