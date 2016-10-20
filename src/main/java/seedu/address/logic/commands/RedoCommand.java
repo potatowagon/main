@@ -1,6 +1,6 @@
 package seedu.address.logic.commands;
 
-import java.util.EmptyStackException;
+import seedu.address.commons.exceptions.IllegalValueException;
 
 public class RedoCommand extends Command {
 
@@ -9,13 +9,13 @@ public class RedoCommand extends Command {
 
     @Override
     public CommandResult execute() {
+        Command action;
         try {
-            Command action = model.redo();
-            return new CommandResult("Redid " + action.getCommandWord());
-
-        } catch (EmptyStackException e) {
+            action = model.redo();
+        } catch (IllegalValueException e) {
             return new CommandResult("No undos to redo.");
         }
+        return new CommandResult("Redid " + action.getCommandWord());
     }
 
     @Override

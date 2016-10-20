@@ -1,7 +1,7 @@
 package seedu.address.model;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
-import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -33,15 +33,13 @@ public class ModelManager extends ComponentManager implements Model {
     private final FilteredList<DeadlineTask> filteredDeadlineTasks;
 
     //for undo
-    private Stack<Commit> commitStack = new Stack<Commit>();//a stack of past TaskBook states
-
-    //for redo
-    private Stack<Commit> redoables = new Stack<Commit>();
-
+    private ArrayList<Commit> commits = new ArrayList<Commit>();//a stack of past TaskBook states
+    private int head;
     /**
      * Initializes a ModelManager with the given TaskBook
      * TaskBook and its variables should not be null
      */
+
     public ModelManager(ReadOnlyTaskBook taskBook) {
         super();
         assert taskBook != null;
@@ -53,14 +51,16 @@ public class ModelManager extends ComponentManager implements Model {
         this.filteredFloatingTasks = new FilteredList<>(this.taskBook.getFloatingTasks());
         this.filteredEventTasks = new FilteredList<>(this.taskBook.getEventTasks());
         this.filteredDeadlineTasks = new FilteredList<>(this.taskBook.getDeadlineTasks());
+        this.head = commits.size();
     }
 
     public ModelManager() {
         this(new TaskBook());
+        this.head = commits.size();
     }
 
     @Override
-    void resetData(ReadOnlyTaskBook newData) {
+    public void resetData(ReadOnlyTaskBook newData) {
         taskBook.resetData(newData);
         indicateTaskBookChanged();
     }
@@ -90,38 +90,33 @@ public class ModelManager extends ComponentManager implements Model {
 
     //=============for undo and redo===================================
     @Override
-    public Command undo() throws EmptyStackException {
-        Commit lastCommit = commitStack.pop();
-        redoables.push(new Commit(lastCommit.getCommand(), new TaskBook(getTaskBook())));
-        resetData(lastCommit.getTaskBook());
-        Command undoneAction = lastCommit.getCommand();
-        return undoneAction;
-    }
+    public Command undo() throws IllegalValueException {
 
-    @Override
-    public void discardRecentCommit() {
-        commitStack.pop();
-    }
-
-    @Override
-    public void resetRedoables() {
-        redoables = new Stack<Commit>();
+        if (head <= 0) {
+            System.out.println(head);
+            throw new IllegalValueException("No actions to undo");
+        }
+        head--;
+        Commit commit = commits.get(head);
+        resetData(new TaskBook(commit.getTaskBook()));
+        return commit.getCommand();
     }
 
     @Override
     public void recordState(Command command) {
-        commitStack.push(new Commit(command, new TaskBook(getTaskBook())));
-    }
-
-    public Commit snapshot(Command command) {
-        return new Commit(command, new TaskBook(getTaskBook()));
+        commits.add(new Commit(command, new TaskBook(getTaskBook())));
+        this.head = commits.size() - 1;
     }
 
     @Override
-    public Command redo() throws EmptyStackException {
-        Commit commit = redoables.pop();
-        recordState(commit.getCommand());
-        resetData(commit.getTaskBook());
+    public Command redo() throws IllegalValueException {
+        if (head >= commits.size() - 1) {
+            System.out.println(head);
+            throw new IllegalValueException("no undos to redo");
+        }
+        head++;
+        Commit commit = commits.get(head);
+        resetData(new TaskBook(commit.getTaskBook()));
         return commit.getCommand();
     }
 
@@ -130,10 +125,10 @@ public class ModelManager extends ComponentManager implements Model {
      * @return
      */
     public boolean hasUncommittedChanges() throws EmptyStackException {
-        if (commitStack.isEmpty()) {
+        if (commits.isEmpty()) {
             return true;
         }
-        return !(this.taskBook.equals(commitStack.peek().getTaskBook()));
+        return !(this.taskBook.equals(commits.get(commits.size() - 1).getTaskBook()));
     }
 
     //=========== Filtered Task List Accessors ===============================================================

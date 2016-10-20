@@ -17,7 +17,7 @@ import seedu.address.model.task.TaskNotFoundException;
  */
 public interface Model {
     /** Clears existing backing model and replaces with the provided new data. */
-    private void resetData(ReadOnlyTaskBook newData);
+    void resetData(ReadOnlyTaskBook newData);
 
     /** Returns the TaskBook */
     ReadOnlyTaskBook getTaskBook();
@@ -29,20 +29,17 @@ public interface Model {
     void addTask(Task task);
 
     //undo and redo
-    /** Undo prev action that modifies data**/
-    Command undo();
-
-    /** reset stack of redoable actions when a non undo modifying data command is called**/
-    void resetRedoables();
+    /** Undo prev action that modifies data
+     * @throws IllegalValueException **/
+    Command undo() throws IllegalValueException;
 
     void recordState(Command command);
 
     boolean hasUncommittedChanges();
 
-    void discardRecentCommit();
-
-    /** redo previous undo **/
-    Command redo();
+    /** redo previous undo
+     * @throws IllegalValueException **/
+    Command redo() throws IllegalValueException;
     /////////////end of undo and redo//////////
 
     /** Returns the filtered task list as an {@code UnmodifiableObservableList<Task>} */

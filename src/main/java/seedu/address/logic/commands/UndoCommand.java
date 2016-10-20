@@ -1,6 +1,6 @@
 package seedu.address.logic.commands;
 
-import java.util.EmptyStackException;
+import seedu.address.commons.exceptions.IllegalValueException;
 
 public class UndoCommand extends Command {
 
@@ -10,12 +10,14 @@ public class UndoCommand extends Command {
 
     @Override
     public CommandResult execute() {
+
+        Command undoneAction;
         try {
-            Command undoneAction = model.undo();
-            return new CommandResult("Successfully undid previous " + undoneAction.getCommandWord());
-        } catch (EmptyStackException e) {
+            undoneAction = model.undo();
+        } catch (IllegalValueException e) {
             return new CommandResult("No actions to undo.");
         }
+        return new CommandResult("Successfully undid previous " + undoneAction.getCommandWord());
     }
 
     @Override
