@@ -33,10 +33,10 @@ public class ModelManager extends ComponentManager implements Model {
     private final FilteredList<DeadlineTask> filteredDeadlineTasks;
 
     //for undo
-    public Stack<Commit> commitStack = new Stack<Commit>();//a stack of past TaskBook states
+    private Stack<Commit> commitStack = new Stack<Commit>();//a stack of past TaskBook states
 
     //for redo
-    public Stack<Commit> redoables = new Stack<Commit>();
+    private Stack<Commit> redoables = new Stack<Commit>();
 
     /**
      * Initializes a ModelManager with the given TaskBook
@@ -60,7 +60,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void resetData(ReadOnlyTaskBook newData) {
+    void resetData(ReadOnlyTaskBook newData) {
         taskBook.resetData(newData);
         indicateTaskBookChanged();
     }

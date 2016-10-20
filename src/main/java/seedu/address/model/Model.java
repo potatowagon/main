@@ -17,7 +17,7 @@ import seedu.address.model.task.TaskNotFoundException;
  */
 public interface Model {
     /** Clears existing backing model and replaces with the provided new data. */
-    void resetData(ReadOnlyTaskBook newData);
+    private void resetData(ReadOnlyTaskBook newData);
 
     /** Returns the TaskBook */
     ReadOnlyTaskBook getTaskBook();
