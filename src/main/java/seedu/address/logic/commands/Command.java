@@ -44,12 +44,6 @@ public abstract class Command {
         EventsCenter.getInstance().post(new IncorrectCommandAttemptedEvent(this));
     }
 
-    /**
-     * Does this command modify data in TaskBook? true or false
-     * @return
-     */
-
-
     /***
      * To return the command word child classes of Command will have
      * @return
