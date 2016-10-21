@@ -361,8 +361,6 @@ add "DEADLINE_NAME" <DATE> <TIME>
 
 * Deadline name should be in a pair of quotation marks. And quotations marks are not allowed in deadline name.
 
-* Keywords like `tdy`, `tmr`, `yst`, can be used in the `DATE` field.
-
 * Formats of `DATE` and `TIME` should follow those stated above in this user guide. See [Date Format](#DateFormat) and [Time Format](#TimeFormat)
 
 #### Examples
