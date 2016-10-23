@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.Command;
+import seedu.address.model.ModelManager.HeadAtBoundaryException;
 import seedu.address.model.config.ReadOnlyConfig;
 import seedu.address.model.task.DeadlineTask;
 import seedu.address.model.task.EventTask;
@@ -116,16 +117,16 @@ public interface Model {
     /**
      * resets the TaskBook to the TaskBook before it was changed by the most recent undo.
      * @return the Command that was redone
-     * @throws IllegalValueException
+     * @throws HeadAtBoundaryException
      */
-    Command redo() throws IllegalValueException;
+    Command redo() throws HeadAtBoundaryException;
 
     /**
      * resets the TaskBook to it's previous state.
      * @return the Command that was undone
-     * @throws IllegalValueException
+     * @throws HeadAtBoundaryException
      */
-    Command undo() throws IllegalValueException;
+    Command undo() throws HeadAtBoundaryException;
 
     /**
      *@return true if TaskBook has changed
