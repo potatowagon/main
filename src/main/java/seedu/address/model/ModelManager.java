@@ -283,7 +283,6 @@ public class ModelManager extends ComponentManager implements Model {
     public Command undo() throws IllegalValueException {
 
         if (head <= 0) {
-            System.out.println(head);
             throw new IllegalValueException("No actions to undo");
         }
         Command undoneAction = commits.get(head).getCommand();
