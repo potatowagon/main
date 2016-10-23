@@ -32,8 +32,8 @@ public class ModelManager extends ComponentManager implements Model {
     private final FilteredList<EventTask> filteredEventTasks;
 
     //for undo
-    private ArrayList<Commit> commits = new ArrayList<Commit>();//a stack of past TaskBook states
-    private int head;
+    private ArrayList<Commit> commits = new ArrayList<Commit>();
+    private int head; //head points to a the current commit which holds the TaskBook displayed by the UI
 
     /**
      * Initializes a ModelManager with the given config and TaskBook TaskBook
