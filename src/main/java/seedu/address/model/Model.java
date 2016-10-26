@@ -4,6 +4,7 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.commands.Command;
 import seedu.address.model.config.ReadOnlyConfig;
 import seedu.address.model.task.DeadlineTask;
 import seedu.address.model.task.EventTask;
@@ -104,5 +105,14 @@ public interface Model {
      * If predicate is null, the filtered event task list will be populated with all event tasks.
      */
     void setEventTaskFilter(Predicate<? super EventTask> predicate);
+
+    ////undo redo
+    void recordState(Command command);
+
+    Command redo() throws IllegalValueException;
+
+    Command undo() throws IllegalValueException;
+
+    boolean hasUncommittedChanges();
 
 }
