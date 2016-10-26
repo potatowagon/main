@@ -32,8 +32,21 @@ public class TaskBook implements ReadOnlyTaskBook {
      * Tasks are copied into this TaskBook.
      */
     public TaskBook(ReadOnlyTaskBook toBeCopied) {
+
         this();
         resetData(toBeCopied);
+    }
+
+    /**
+     * Tasks are copied into this TaskBook.
+     */
+    public TaskBook(List<Task> tasks, List<FloatingTask> floatingTasks,
+                    List<EventTask> eventTasks, List<DeadlineTask> deadlineTasks) {
+        this();
+        setTasks(tasks);
+        setFloatingTasks(floatingTasks);
+        setEventTasks(eventTasks);
+        setDeadlineTasks(deadlineTasks);
     }
 
     /**
