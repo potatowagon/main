@@ -12,11 +12,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.google.common.eventbus.Subscribe;
-import com.sun.javafx.tk.Toolkit.Task;
 
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.model.TaskBookChangedEvent;
-import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -55,8 +53,6 @@ public class LogicManagerTest {
         EventsCenter.getInstance().registerHandler(this);
 
         latestSavedTaskBook = new TaskBook(model.getTaskBook()); // last saved assumed to be up to date before.
-        helpShown = false;
-        targetedJumpIndex = -1; // non yet
     }
 
     @After
@@ -113,165 +109,4 @@ public class LogicManagerTest {
         assertCommandBehavior(unknownCommand, "Unknown command: uicfhmowqewca");
     }
 
-    @Test
-    public void execute_help() throws Exception {
-        assertCommandBehavior("help", HelpCommand.SHOWING_HELP_MESSAGE);
-        assertTrue(helpShown);
-    }
-
-    @Test
-    public void execute_exit() throws Exception {
-        assertCommandBehavior("exit", ExitCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
-    }
-
-    @Test
-    public void execute_clear() throws Exception {
-        TestDataHelper helper = new TestDataHelper();
-        model.addTask(helper.generateTask(1));
-        model.addTask(helper.generateTask(2));
-        model.addTask(helper.generateTask(3));
-
-        assertCommandBehavior("clear", ClearCommand.MESSAGE_SUCCESS, new TaskBook(), Collections.emptyList());
-    }
-
-    @Test
-    public void execute_list_showsAllTasks() throws Exception {
-        // prepare expectations
-        TestDataHelper helper = new TestDataHelper();
-        TaskBook expectedAB = helper.generateAddressBook(2);
-        List<? extends Task> expectedList = expectedAB.getTasks();
-
-        // prepare address book state
-        helper.addToModel(model, 2);
-
-        assertCommandBehavior("list",
-                ListCommand.MESSAGE_SUCCESS,
-                expectedAB,
-                expectedList);
-    }
-
-
-    /**
-     * Confirms the 'invalid argument index number behaviour' for the given command
-     * targeting a single task in the shown list, using visible index.
-     * @param commandWord to test assuming it targets a single task in the last shown list based on visible index.
-     */
-    private void assertIncorrectIndexFormatBehaviorForCommand(String commandWord, String expectedMessage) throws Exception {
-        assertCommandBehavior(commandWord , expectedMessage); //index missing
-        assertCommandBehavior(commandWord + " +1", expectedMessage); //index should be unsigned
-        assertCommandBehavior(commandWord + " -1", expectedMessage); //index should be unsigned
-        assertCommandBehavior(commandWord + " 0", expectedMessage); //index cannot be 0
-        assertCommandBehavior(commandWord + " not_a_number", expectedMessage);
-    }
-
-    /**
-     * A utility class to generate test data.
-     */
-    class TestDataHelper {
-
-        Task adam() throws Exception {
-            Name name = new Name("Adam Brown");
-            return new Task(name);
-        }
-
-        /**
-         * Generates a valid task using the given seed.
-         * Running this function with the same parameter values guarantees the returned task will have the same state.
-         * Each unique seed will generate a unique Task object.
-         *
-         * @param seed used to generate the task data field values
-         */
-        Task generateTask(int seed) throws Exception {
-            return new Task(
-                    new Name("Task " + seed)
-            );
-        }
-
-        /** Generates the correct add command based on the task given */
-        String generateAddCommand(Task p) {
-            StringBuffer cmd = new StringBuffer();
-
-            cmd.append("add ");
-
-            cmd.append(p.name.toString());
-
-            return cmd.toString();
-        }
-
-        /**
-         * Generates an TaskBook with auto-generated tasks.
-         */
-        TaskBook generateAddressBook(int numGenerated) throws Exception {
-            TaskBook taskBook = new TaskBook();
-            addToTaskBook(taskBook, numGenerated);
-            return taskBook;
-        }
-
-        /**
-         * Generates an TaskBook based on the list of Tasks given.
-         */
-        TaskBook generateAddressBook(List<Task> tasks) throws Exception {
-            TaskBook taskBook = new TaskBook();
-            addToTaskBook(taskBook, tasks);
-            return taskBook;
-        }
-
-        /**
-         * Adds auto-generated Task objects to the given TaskBook
-         * @param taskBook The TaskBook to which the Tasks will be added
-         */
-        void addToTaskBook(TaskBook taskBook, int numGenerated) throws Exception {
-            addToTaskBook(taskBook, generateTaskList(numGenerated));
-        }
-
-        /**
-         * Adds the given list of Tasks to the given TaskBook
-         */
-        void addToTaskBook(TaskBook taskBook, List<Task> tasksToAdd) throws Exception {
-            for (Task p: tasksToAdd) {
-                taskBook.addTask(p);
-            }
-        }
-
-        /**
-         * Adds auto-generated Task objects to the given model
-         * @param model The model to which the Tasks will be added
-         */
-        void addToModel(Model model, int numGenerated) throws Exception {
-            addToModel(model, generateTaskList(numGenerated));
-        }
-
-        /**
-         * Adds the given list of Tasks to the given model
-         */
-        void addToModel(Model model, List<Task> tasksToAdd) throws Exception {
-            for (Task p: tasksToAdd) {
-                model.addTask(p);
-            }
-        }
-
-        /**
-         * Generates a list of Tasks based on the flags.
-         */
-        List<Task> generateTaskList(int numGenerated) throws Exception {
-            List<Task> tasks = new ArrayList<>();
-            for (int i = 1; i <= numGenerated; i++) {
-                tasks.add(generateTask(i));
-            }
-            return tasks;
-        }
-
-        List<Task> generateTaskList(Task... tasks) {
-            return Arrays.asList(tasks);
-        }
-
-        /**
-         * Generates a Task object with given name. Other fields will have some dummy values.
-         */
-        Task generateTaskWithName(String name) throws Exception {
-            return new Task(
-                    new Name(name)
-            );
-        }
-    }
 }
