@@ -50,13 +50,11 @@ public class ModelManager extends ComponentManager implements Model {
         this.filteredDeadlineTasks = new FilteredList<>(this.taskBook.getDeadlineTasks());
         this.filteredEventTasks = new FilteredList<>(this.taskBook.getEventTasks());
         recordState(null);
-        this.head = commits.size() - 1;
     }
 
     public ModelManager() {
         this(new Config(), new TaskBook());
         recordState(null);
-        this.head = commits.size() - 1;
     }
 
     //// Config
