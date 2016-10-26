@@ -16,7 +16,6 @@ import seedu.address.model.config.ReadOnlyConfig;
 import seedu.address.model.task.DeadlineTask;
 import seedu.address.model.task.EventTask;
 import seedu.address.model.task.FloatingTask;
-import seedu.address.model.task.TaskNotFoundException;
 
 /**
  * Represents the in-memory model of the address book data. All changes to any
@@ -93,7 +92,7 @@ public class ModelManager extends ComponentManager implements Model {
         raise(new TaskBookChangedEvent(taskBook));
     }
 
-    //// Floating tasks
+    ////Floating tasks
 
     @Override
     public synchronized void addFloatingTask(FloatingTask floatingTask) {
@@ -121,8 +120,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public synchronized FloatingTask removeFloatingTask(int indexInFilteredList) throws IllegalValueException {
-        final FloatingTask removedFloating = taskBook
-                .removeFloatingTask(getFloatingTaskSourceIndex(indexInFilteredList));
+        final FloatingTask removedFloating = taskBook.removeFloatingTask(getFloatingTaskSourceIndex(indexInFilteredList));
         indicateTaskBookChanged();
         return removedFloating;
     }
@@ -222,12 +220,8 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-
     public synchronized EventTask removeEventTask(int indexInFilteredList) throws IllegalValueException {
         final EventTask removedEvent = taskBook.removeEventTask(getEventTaskSourceIndex(indexInFilteredList));
-
-    public synchronized DeadlineTask removeDeadlineTask(int indexInFilteredList) throws IllegalValueException {
-        final DeadlineTask removedDeadline = taskBook.removeDeadlineTask(getDeadlineTaskSourceIndex(indexInFilteredList));
         indicateTaskBookChanged();
         return removedEvent;
     }
