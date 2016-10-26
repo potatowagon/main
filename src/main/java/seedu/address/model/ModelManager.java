@@ -16,6 +16,7 @@ import seedu.address.model.config.ReadOnlyConfig;
 import seedu.address.model.task.DeadlineTask;
 import seedu.address.model.task.EventTask;
 import seedu.address.model.task.FloatingTask;
+import seedu.address.model.task.TaskNotFoundException;
 
 /**
  * Represents the in-memory model of the address book data. All changes to any
@@ -90,32 +91,6 @@ public class ModelManager extends ComponentManager implements Model {
     /** Raises an event to indicate the model has changed */
     private void indicateTaskBookChanged() {
         raise(new TaskBookChangedEvent(taskBook));
-    }
-
-    @Override
-    public synchronized void deleteTask(Task target) throws TaskNotFoundException {
-        taskBook.removeTask(target);
-        indicateTaskBookChanged();
-    }
-
-    @Override
-    public synchronized void addTask(Task person) {
-        taskBook.addTask(person);
-        setFilter(null);
-        indicateTaskBookChanged();
-    }
-
-    // =========== Filtered Task List Accessors
-    // ===============================================================
-
-    @Override
-    public UnmodifiableObservableList<Task> getFilteredTaskList() {
-        return new UnmodifiableObservableList<>(filteredTasks);
-    }
-
-    @Override
-    public void setFilter(Predicate<Task> predicate) {
-        filteredTasks.setPredicate(predicate);
     }
 
     //// Floating tasks
@@ -285,7 +260,7 @@ public class ModelManager extends ComponentManager implements Model {
         Command undoneAction = commits.get(head).getCommand();
         head--;
         Commit commit = commits.get(head);
-        resetData(new TaskBook(commit.getTaskBook()));
+        taskBook.resetData(new TaskBook(commit.getTaskBook()));
         return undoneAction;
     }
 
@@ -307,7 +282,7 @@ public class ModelManager extends ComponentManager implements Model {
         }
         head++;
         Commit commit = commits.get(head);
-        resetData(new TaskBook(commit.getTaskBook()));
+        taskBook.resetData(new TaskBook(commit.getTaskBook()));
         return commit.getCommand();
     }
 
