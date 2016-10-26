@@ -13,5 +13,4 @@ public interface Parser<T> {
      * contain the substring ranges of the input string which caused the parsing to fail.
      */
     T parse(String str) throws ParseException;
-
 }
