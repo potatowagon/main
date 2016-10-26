@@ -9,7 +9,13 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
+<<<<<<< HEAD
 import seedu.address.logic.parser.TaskTrackerParser;
+=======
+import seedu.address.logic.commands.RedoCommand;
+import seedu.address.logic.commands.UndoCommand;
+import seedu.address.logic.parser.Parser;
+>>>>>>> 0081dfc... recordState when command (exceot undo and redo) changes taskbook
 import seedu.address.model.Model;
 import seedu.address.model.TaskBookChangeListener;
 import seedu.address.model.config.Config;
@@ -45,6 +51,10 @@ public class LogicManager extends ComponentManager implements Logic {
         final CommandResult result = command.execute();
         updateConfigStorage(oldConfig);
         updateTaskBookStorage(taskBookListener);
+
+        if (model.hasUncommittedChanges() && !(command instanceof UndoCommand) && !(command instanceof RedoCommand) ) {
+            model.recordState(command);
+        }
         return result;
     }
 
