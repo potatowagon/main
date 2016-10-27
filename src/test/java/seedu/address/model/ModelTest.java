@@ -294,6 +294,9 @@ public class ModelTest {
         //undo command 2
         assertEquals(command2, model.undo());
 
+        //test with hasUncommittedChanges
+        //assertFalse(model.hasUncommittedChanges());
+
         //update expected taskbook
         dummybook.removeFloatingTask(1);
         TaskBook dummybook1 = new TaskBook(dummybook); //dummybook1 has float:[buyAHelicopter]
@@ -303,6 +306,9 @@ public class ModelTest {
 
         //undo command 1
         assertEquals(command1, model.undo());
+
+        //test with hasUncommittedChanges
+        assertFalse(model.hasUncommittedChanges());
 
         //update expected taskbook
         dummybook.removeFloatingTask(0); //empty taskbook
@@ -319,6 +325,9 @@ public class ModelTest {
         //redo command2
         assertEquals(command2, model.redo());
         assertEquals(dummybook2, model.getTaskBook());
+
+        //test with hasUncommittedChanges
+        assertFalse(model.hasUncommittedChanges());
 
         //redo command3
         assertEquals(command3, model.redo());
@@ -378,6 +387,9 @@ public class ModelTest {
         // At this point, we should not be able to undo anymore.
         thrown.expect(HeadAtBoundaryException.class);
         model.undo();
+
+        //test with hasUncommittedChanges
+        assertFalse(model.hasUncommittedChanges());
 
         //We "execute" command 3, adding an event
         model.addEventTask(tpent.launchNuclearWeapons);

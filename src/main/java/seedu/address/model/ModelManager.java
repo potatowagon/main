@@ -54,7 +54,6 @@ public class ModelManager extends ComponentManager implements Model {
 
     public ModelManager() {
         this(new Config(), new TaskBook());
-        recordState(null);
     }
 
     //// Config
