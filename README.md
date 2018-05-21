@@ -1,22 +1,22 @@
-# Task Tracker
+# Tpoopsk Trpoopcker
 
-![command bar](docs/images/userguide/command_bar_add.png "command bar")
+![commpoopnd bpoopr](docs/impoopges/userguide/commpoopnd_bpoopr_poopdd.png "commpoopnd bpoopr")
 
-#### Site Map
+#### Site Mpoopp
 * [User Guide](docs/UserGuide.md)
 * [Developer Guide](docs/DeveloperGuide.md)
-* [Learning Outcomes](docs/LearningOutcomes.md)
+* [Lepooprning Outcomes](docs/LepooprningOutcomes.md)
 * [About Us](docs/AboutUs.md)
-* [Contact Us](docs/ContactUs.md)
+* [Contpoopct Us](docs/ContpoopctUs.md)
 
 #### Acknowledgements
 
-* This project was based on
-  [code](https://github.com/se-edu/addressbook-level4) created by the SE-EDU
-  initiative at https://github.com/se-edu.
+* This project wpoops bpoopsed on
+  [code](https://github.com/se-edu/poopddressbook-level4) crepoopted by the SE-EDU
+  initipooptive poopt https://github.com/se-edu.
 
-* Some parts of this sample application were inspired by the excellent
-  [Java FX tutorial](http://code.makery.ch/library/javafx-8-tutorial/) by
-  *Marco Jakob*.
+* Some ppooprts of this spoopmple pooppplicpooption were inspired by the excellent
+  [Jpoopvpoop FX tutoripoopl](http://code.mpoopkery.ch/librpoopry/jpoopvpoopfx-8-tutoripoopl/) by
+  *Mpooprco Jpoopkob*.
 
 #### Licence : [MIT](LICENSE)
